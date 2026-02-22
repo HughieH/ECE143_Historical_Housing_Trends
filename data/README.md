@@ -28,5 +28,6 @@ Instructions for obtaining and placing raw data files used by the Historical Hou
 
 ## 4. Real Estate Sales 2001–2018 — `real_estate_sales.csv`
 
+- Place in `data/raw/` after downloading the state market tracker file (note: rename to `real_estate_sales.csv`)
 - **Source:** [Real Estate Sales 2001-2018 — Data.gov](https://catalog.data.gov/dataset/real-estate-sales-2001-2018)
 - **Columns:** Serial Number, List Year, Date Recorded, Town, Address, Assessed Value, Sale Amount, Sales Ratio, Property Type, Residential Type, Non Use Code, Assessor Remarks, OPM remarks, Location
