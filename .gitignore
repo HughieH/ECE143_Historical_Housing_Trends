@@ -1,9 +1,4 @@
-data/raw/*
-!data/raw/hpi_at_county.csv
-!data/raw/aaa.xlsx
-!data/raw/bbb.xlsx
-!data/raw/ccc.xlsx
-!data/raw/state_market_tracker.tsv000
+data/raw/real_estate_sales.csv
 
 .DS_Store
 .venv/

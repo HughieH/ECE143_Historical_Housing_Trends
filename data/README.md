@@ -1,7 +1,4 @@
-# Raw Data Sources
-
-Instructions for obtaining and placing raw data files used by the Historical House Price Trends Visualizer. Place all files in `data/raw/`.
-
+# Data Sources
 ---
 
 ## 1. FHFA Housing Price Index (county-level) — `hpi_at_county.csv`
@@ -22,7 +19,6 @@ Instructions for obtaining and placing raw data files used by the Historical Hou
 ## 3. Redfin State Market Tracker — `state_market_tracker.tsv000`
 
 - **Source:** [Redfin Data Center](https://www.redfin.com/news/data-center/)
-- **Note:** Supplementary data source & is not used directly in main data cleaning script
 
 ---
 
