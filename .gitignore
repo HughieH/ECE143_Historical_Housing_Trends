@@ -1,0 +1,15 @@
+data/raw/*
+!data/raw/hpi_at_county.csv
+!data/raw/aaa.xlsx
+!data/raw/bbb.xlsx
+!data/raw/ccc.xlsx
+
+.DS_Store
+.venv/
+*.egg-info/
+src/project.egg-info/
+__pycache__/
+.env
+*.pyc
+*.tsv*
+real_estate_sales.csv
