@@ -1,5 +1,4 @@
 # Data Sources
----
 
 ## 1. FHFA Housing Price Index (county-level) — `hpi_at_county.csv`
 
