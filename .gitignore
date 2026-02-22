@@ -3,13 +3,11 @@ data/raw/*
 !data/raw/aaa.xlsx
 !data/raw/bbb.xlsx
 !data/raw/ccc.xlsx
+!data/raw/state_market_tracker.tsv000
 
 .DS_Store
 .venv/
-*.egg-info/
-src/project.egg-info/
 __pycache__/
 .env
 *.pyc
-*.tsv*
 real_estate_sales.csv
