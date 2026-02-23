@@ -2,6 +2,8 @@
 
 An animated visualization of U.S. real estate price growth rates from approximately 1985–2024, combining animated state rankings with county-level choropleth maps.
 
+[Link to Project Doc](https://docs.google.com/document/d/1YSsB1MgWivRdj0NZkEdz1WsyvrbjEVrToSkB1Ts24Ko/edit?usp=sharing)
+
 ## File Structure
 
 ```
