@@ -7,18 +7,18 @@ An animated visualization of U.S. real estate price growth rates from approximat
 ## File Structure
 
 ```
-project-root/
+project/
 ├── data/
-│   ├── raw/                        # raw downloaded data files (most gitignored due to large size)
-│   └── README.md                   # instructions for downloading raw data
+│   ├── raw/                        # raw data files (real estate sales not included due to size)
+│   └── README.md                   # description of raw data
 ├── output/
-│   └── (cleaned CSVs: county_growth_rates.csv, state_growth_rates.csv)
+│   └── (cleaned files: county_growth_rates.csv, state_growth_rates.csv)
 ├── notebooks/
 │   ├── exploration.ipynb
 │   ├── choropleth.ipynb
 │   └── price_trends_1year_chropleth.ipynb
 ├── src/
-│   └── data_cleaning.py            # main cleaning script
+│   └── data_cleaning.py            # data cleaning script
 ├── .gitignore
 ├── requirements.txt
 └── README.md

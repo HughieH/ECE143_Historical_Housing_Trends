@@ -29,7 +29,7 @@ def get_project_paths():
 
 def load_county_raw(raw_dir):
     """
-    load county-level HPI CSV from data/raw/hpi_at_county.csv
+    load county level HPI info from hpi_at_county.xlsx
 
     parameters:
         input:
@@ -39,13 +39,13 @@ def load_county_raw(raw_dir):
     """
     assert isinstance(raw_dir, Path)
     assert raw_dir.is_dir()
-    path = raw_dir / "hpi_at_county.csv"
-    return pd.read_csv(path, dtype={"FIPS code": str})
+    path = raw_dir / "hpi_at_county.xlsx"
+    return pd.read_excel(path, engine = "openpyxl", header = 5)
 
 
 def clean_county_fips(df):
     """
-    zero-pad FIPS code to 5 digits (e.g. 1001 -> 01001)
+    pad FIPS code to 5 digits (e.g. 1001 -> 01001)
 
     parameters:
         input:
@@ -74,15 +74,15 @@ def clean_county_annual_change(df):
     assert isinstance(df, pd.DataFrame)
     assert "Annual Change (%)" in df.columns
     before = len(df)
-    df["Annual Change (%)"] = pd.to_numeric(df["Annual Change (%)"], errors="coerce")
-    df = df.dropna(subset=["Annual Change (%)"])
+    df["Annual Change (%)"] = pd.to_numeric(df["Annual Change (%)"], errors = "coerce")
+    df = df.dropna(subset = ["Annual Change (%)"])
     dropped = before - len(df)
     return df, dropped
 
 
 def build_county_growth_rates(raw_dir, out_dir):
     """
-    create county_growth_rates.csv from raw hpi_at_county.csv
+    create county_growth_rates.csv from hpi_at_county.xlsx
 
     parameters:
         input:
@@ -107,18 +107,18 @@ def build_county_growth_rates(raw_dir, out_dir):
 
     required = ["FIPS code", "State", "County", "Year"]
     before = len(df)
-    df = df.dropna(subset=required)
+    df = df.dropna(subset = required)
     summary["dropped_missing_key"] = before - len(df)
     if summary["dropped_missing_key"]:
         print(f"  Dropped {summary['dropped_missing_key']} rows missing one of {required}.")
 
-    df = df.sort_values(by=["State", "County", "Year"])
+    df = df.sort_values(by = ["State", "County", "Year"])
     out_cols = ["State", "County", "FIPS code", "Year", "Annual Change (%)", "HPI"]
     df = df[out_cols]
 
-    out_dir.mkdir(parents=True, exist_ok=True)
+    out_dir.mkdir(parents = True, exist_ok = True)
     out_path = out_dir / "county_growth_rates.csv"
-    df.to_csv(out_path, index=False)
+    df.to_csv(out_path, index = False)
     summary["final_rows"] = len(df)
     print(f"  Saved {summary['final_rows']} rows to {out_path}.")
     return summary
@@ -126,7 +126,7 @@ def build_county_growth_rates(raw_dir, out_dir):
 
 def load_state_raw(raw_dir):
     """
-    load state-level HPI Excel from data/raw/hpi_at_state.xlsx
+    load state level HPI info from hpi_at_state.xlsx
 
     parameters:
         input:
@@ -137,7 +137,7 @@ def load_state_raw(raw_dir):
     assert isinstance(raw_dir, Path)
     assert raw_dir.is_dir()
     path = raw_dir / "hpi_at_state.xlsx"
-    return pd.read_excel(path, engine="openpyxl", header=5)
+    return pd.read_excel(path, engine = "openpyxl", header = 5)
 
 
 def build_state_growth_rates(raw_dir, out_dir):
@@ -161,27 +161,27 @@ def build_state_growth_rates(raw_dir, out_dir):
 
     required = ["Abbreviation", "State", "Year"]
     before = len(df)
-    df = df.dropna(subset=required)
+    df = df.dropna(subset = required)
     summary["dropped_missing"] = before - len(df)
     if summary["dropped_missing"]:
         print(f"  Dropped {summary['dropped_missing']} rows missing one of {required}.")
 
     df["Annual Change (%)"] = pd.to_numeric(df["Annual Change (%)"], errors="coerce")
-    df = df.sort_values(by=["Abbreviation", "Year"])
+    df = df.sort_values(by = ["Abbreviation", "Year"])
     df["Rolling Avg Growth Rate (3yr)"] = (
         df.groupby("Abbreviation")["Annual Change (%)"].transform(
-            lambda x: x.rolling(3, min_periods=1).mean()
+            lambda x: x.rolling(3, min_period = 1).mean()
         )
     )
 
     out_cols = ["Abbreviation", "State", "Year", "Annual Change (%)", "Rolling Avg Growth Rate (3yr)"]
     df = df[out_cols]
-    df = df.sort_values(by=["Abbreviation", "Year"])
+    df = df.sort_values(by = ["Abbreviation", "Year"])
     summary["final_rows"] = len(df)
 
-    out_dir.mkdir(parents=True, exist_ok=True)
+    out_dir.mkdir(parents = True, exist_ok = True)
     out_path = out_dir / "state_growth_rates.csv"
-    df.to_csv(out_path, index=False)
+    df.to_csv(out_path, index = False)
     print(f"  Saved {summary['final_rows']} rows to {out_path}.")
     return summary
 
@@ -203,7 +203,7 @@ def print_summary(county_summary, state_summary, out_dir):
     county_path = out_dir / "county_growth_rates.csv"
     state_path = out_dir / "state_growth_rates.csv"
 
-    county_df = pd.read_csv(county_path, dtype={"FIPS code": str})
+    county_df = pd.read_csv(county_path, dtype = {"FIPS code": str})
 
     print("\n" + "=" * 60)
     print("DATA CLEANING SUMMARY")
@@ -240,9 +240,9 @@ def main():
     assert isinstance(raw_dir, Path)
     assert isinstance(out_dir, Path)
 
-    if not (raw_dir / "hpi_at_county.csv").exists():
+    if not (raw_dir / "hpi_at_county.xlsx").exists():
         raise FileNotFoundError(
-            f"County data not found: {raw_dir / 'hpi_at_county.csv'}. "
+            f"County data not found: {raw_dir / 'hpi_at_county.xlsx'}. "
             "Run from project root and ensure raw data is in data/raw/ per data/README.md."
         )
 
