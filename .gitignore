@@ -6,3 +6,5 @@ __pycache__/
 .env
 *.pyc
 real_estate_sales.csv
+
+uv.lock

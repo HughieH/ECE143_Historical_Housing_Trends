@@ -26,7 +26,7 @@ project-root/
 
 ## How to Run
 
-1. **Install dependencies:** `pip install -r requirements.txt`
+1. **Install dependencies:** `pip install -r requirements.txt` or `uv sync` if you have `uv`.
 2. **Download raw data** instructions can be found in `data/README.md`
 3. **Run data cleaning:** `data_cleaning.py`
 4. **Run notebooks** in `notebooks/` for choropleth and state ranking visualizations
