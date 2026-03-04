@@ -10,7 +10,7 @@ from pathlib import Path
 DATA_CSV = "../output/state_growth_rates.csv"
 OUT_DIR  = "frames"
 OUT_MP4  = "state_growth_rates_choropleth_animation.mp4"
-FPS      = 12
+FPS      = 6
 SCALE    = 2          
 WIDTH    = 1100
 HEIGHT   = 600
@@ -19,7 +19,7 @@ os.makedirs(OUT_DIR, exist_ok=True)
 
 df = pd.read_csv(DATA_CSV)
 
-FIXED_MIN, FIXED_MAX = -20, 20  # or compute from df, see below
+FIXED_MIN, FIXED_MAX = -20, 20 
 
 fig = px.choropleth(
     df,
@@ -84,6 +84,12 @@ print(f"Rendered {len(order)} frames into {OUT_DIR}/")
 
 frames_dir = Path(OUT_DIR)
 pattern = str(frames_dir / "frame_%04d.png")
+
+"""
+To run manually, make sure you have ffmpeg installed
+
+Command: <ffmpeg -y -framerate 6 -i frames/frame_%04d.png -pix_fmt yuv420p -crf 18 state_growth_rates_choropleth_animation.mp4>
+"""
 
 cmd = [
     "ffmpeg",
