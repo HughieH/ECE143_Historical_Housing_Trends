@@ -4,6 +4,10 @@ An animated visualization of U.S. real estate price growth rates from approximat
 
 [Link to Project Doc](https://docs.google.com/document/d/1YSsB1MgWivRdj0NZkEdz1WsyvrbjEVrToSkB1Ts24Ko/edit?usp=sharing)
 
+## State Level Chloropath Animation
+
+[<video src="./src/state_growth_rates_choropleth_animation.mp4" controls width="800"> </video>](https://github.com/user-attachments/assets/cf255af1-794c-4973-94c8-8f82761b473d)
+
 ## File Structure
 
 ```
