@@ -2,3 +2,5 @@ pandas
 plotly
 numpy
 openpyxl
+lxml
+kaleido
