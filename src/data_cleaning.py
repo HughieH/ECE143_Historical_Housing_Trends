@@ -140,6 +140,29 @@ def load_state_raw(raw_dir):
     return pd.read_excel(path, engine = "openpyxl", header = 5)
 
 
+def prepare_state_hpi(raw_dir):
+    """
+    load raw state HPI values and return a clean DataFrame
+
+    parameters:
+        input:
+            raw_dir (Path to data/raw directory)
+        output:
+            pd.DataFrame with columns [Abbreviation, State, Year, HPI]
+    """
+    assert isinstance(raw_dir, Path)
+    assert raw_dir.is_dir()
+    df = load_state_raw(raw_dir)
+    df = df.dropna(subset=["Abbreviation", "State", "Year", "HPI"])
+    df["HPI"] = pd.to_numeric(df["HPI"], errors="coerce")
+    df = df.dropna(subset=["HPI"])
+    df["Year"] = df["Year"].astype(int)
+    df = df[["Abbreviation", "State", "Year", "HPI"]].sort_values(
+        by=["Abbreviation", "Year"]
+    )
+    return df.reset_index(drop=True)
+
+
 def build_state_growth_rates(raw_dir, out_dir):
     """
     create state_growth_rates.csv from raw hpi_at_state.xlsx
