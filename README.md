@@ -1,10 +1,10 @@
 # Historical House Price Trends Visualizer
 
-An animated visualization of U.S. real estate price growth rates from approximately 1985–2024, combining animated state rankings with county-level choropleth maps.
+An animated visualization of U.S. real estate price growth rates from approximately 1985–2024, combining animated state rankings with county-level choropleth maps. Data sourced from the [FHFA House Price Index (HPI)](https://www.fhfa.gov/data/hpi).
 
 [Link to Project Doc](https://docs.google.com/document/d/1YSsB1MgWivRdj0NZkEdz1WsyvrbjEVrToSkB1Ts24Ko/edit?usp=sharing)
 
-## State Level Chloropath Animation
+## State Level Choropleth Animation
 
 https://github.com/user-attachments/assets/3a7a76e2-3d75-40b5-8814-d5afb7df3db6
 
@@ -53,7 +53,7 @@ project/
 ## Output Files
 
 - **`output/county_growth_rates.csv`**: County level HPI with FIPS, year, and annual change. Used in choropleth map notebooks (`choropleth.ipynb`, `price_trends_1year_chropleth.ipynb`)
-- **`output/state_growth_rates.csv`**: State level year on yar growth and 3 year rolling average. Used in state ranking visualization
+- **`output/state_growth_rates.csv`**: State level year on year growth and 3 year rolling average. Used in state ranking visualization
 
 ## Team
 
