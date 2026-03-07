@@ -8,6 +8,17 @@ An animated visualization of U.S. real estate price growth rates from approximat
 
 https://github.com/user-attachments/assets/3a7a76e2-3d75-40b5-8814-d5afb7df3db6
 
+## ARIMA Forecast Model
+
+We use an **ARIMA** (AutoRegressive Integrated Moving Average) model to forecast HPI 10 years into the future for all 51 U.S. states. The implementation uses `pmdarima.auto_arima` to automatically select the best (p, d, q) order for each state via AIC minimization.
+
+- **Training**: Fit on historical HPI data per state
+- **Evaluation**: 5-year holdout (2020–2024) with MAE, RMSE, and MAPE metrics
+- **Forecast**: 10-year ahead predictions (2025–2034) with 95% confidence intervals
+- **Visualizations**: Single/multi-state forecast plots, choropleth maps, animated choropleth, and error analysis
+
+See `notebooks/hpi_prediction.ipynb` for the full analysis and `src/prediction.py` for the model code.
+
 ## File Structure
 
 ```
@@ -20,9 +31,13 @@ project/
 ├── notebooks/
 │   ├── exploration.ipynb
 │   ├── choropleth.ipynb
-│   └── price_trends_1year_chropleth.ipynb
+│   ├── price_trends_1year_chropleth.ipynb
+│   └── hpi_prediction.ipynb        # ARIMA forecast analysis
 ├── src/
-│   └── data_cleaning.py            # data cleaning script
+│   ├── data_cleaning.py            # data cleaning script
+│   ├── prediction.py               # ARIMA forecasting module
+│   ├── plot_utils.py               # visualization utilities
+│   └── render_choropleth_to_video.py
 ├── .gitignore
 ├── requirements.txt
 └── README.md
