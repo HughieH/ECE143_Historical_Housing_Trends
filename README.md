@@ -29,7 +29,7 @@ project/
 ├── output/
 │   └── (cleaned files: county_growth_rates.csv, state_growth_rates.csv)
 ├── notebooks/
-│   ├── exploration.ipynb
+│   ├── state_level_choropleth.ipynb
 │   ├── choropleth.ipynb
 │   ├── price_trends_1year_chropleth.ipynb
 │   └── hpi_prediction.ipynb        # ARIMA forecast analysis
