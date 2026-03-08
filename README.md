@@ -8,6 +8,14 @@ An animated visualization of U.S. real estate price growth rates from approximat
 
 https://github.com/user-attachments/assets/3a7a76e2-3d75-40b5-8814-d5afb7df3db6
 
+## Bar Chart Race (HPI by State over Time)
+
+An interactive bar chart race showing HPI rankings across all 51 U.S. states from 1975 to 2025, broken down by quarter.
+
+[View Interactive Bar Chart Race](https://public.flourish.studio/visualisation/27943328/)
+
+The input data was reformatted from the raw FHFA HPI CSV into a wide format suitable for Flourish using `src/HPI_to_race.py`.
+
 ## ARIMA Forecast Model
 
 We use an **ARIMA** (AutoRegressive Integrated Moving Average) model to forecast HPI 10 years into the future for all 51 U.S. states. The implementation uses `pmdarima.auto_arima` to automatically select the best (p, d, q) order for each state via AIC minimization.
@@ -27,7 +35,8 @@ project/
 │   ├── raw/                        # raw data files (real estate sales not included due to size)
 │   └── README.md                   # description of raw data
 ├── output/
-│   └── (cleaned files: county_growth_rates.csv, state_growth_rates.csv)
+│   ├── (choropleth videos: state_growth_rates_choropleth_animation.mp4, state_growth_rates_over_3_yrs_choropleth_animation.mp4)
+│   └── (cleaned files: county_growth_rates.csv, state_growth_rates.csv, hpi_bar_chart_race.csv)
 ├── notebooks/
 │   ├── state_level_choropleth.ipynb
 │   ├── choropleth.ipynb
@@ -35,6 +44,7 @@ project/
 │   └── hpi_prediction.ipynb        # ARIMA forecast analysis
 ├── src/
 │   ├── data_cleaning.py            # data cleaning script
+│   ├── HPI_to_race.py              # data processing for bar chart race
 │   ├── prediction.py               # ARIMA forecasting module
 │   ├── plot_utils.py               # visualization utilities
 │   └── render_choropleth_to_video.py
@@ -54,6 +64,8 @@ project/
 
 - **`output/county_growth_rates.csv`**: County level HPI with FIPS, year, and annual change. Used in choropleth map notebooks (`choropleth.ipynb`, `price_trends_1year_chropleth.ipynb`)
 - **`output/state_growth_rates.csv`**: State level year on year growth and 3 year rolling average. Used in state ranking visualization
+- **`output/hpi_bar_chart_race.csv`**: Wide-format HPI data by state and quarter. Used as input for the Flourish bar chart race
+- **`state_growth_rates_choropleth_animation.mp4`,`state_growth_rates_over_3_yrs_choropleth_animation.mp4`**: county-level choropleth maps
 
 ## Team
 

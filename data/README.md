@@ -7,9 +7,11 @@
 
 ---
 
-## 2. FHFA Housing Price Index (state level data) — `hpi_at_state.xlsx`
+## 2. FHFA Housing Price Index (state level data) — `hpi_at_state.xlsx` and `hpi_at_state_quarterly.csv`
 
-- **Source:** [FHFA HPI Datasets — Annual Data](https://www.fhfa.gov/data/hpi/datasets?tab=annual-data)
+- **Source:** 
+  - [FHFA HPI Datasets — Annual Data](https://www.fhfa.gov/data/hpi/datasets?tab=annual-data)
+  - [FHFA HPI Datasets — Quarterly Data](https://www.fhfa.gov/data/hpi/datasets?tab=quarterly-data)
 - **Columns:** State, Abbreviation, FIPS, Year, Annual Change (%), HPI, HPI with 1990 base, HPI with 2000 base
 
 ---
@@ -18,7 +20,6 @@
 
 - **Source:** [Redfin Data Center](https://www.redfin.com/news/data-center/)
 
----
 
 ## 4. Real Estate Sales 2001–2018 — `real_estate_sales.csv`
 
