@@ -27,7 +27,7 @@ project/
 │   ├── raw/                        # raw data files (real estate sales not included due to size)
 │   └── README.md                   # description of raw data
 ├── output/
-│   └── (cleaned files: county_growth_rates.csv, state_growth_rates.csv)
+│   └── (cleaned files: county_growth_rates.csv, state_growth_rates.csv, state_fastest_growth.csv, county_fastest_growth.csv)
 ├── notebooks/
 │   ├── state_level_choropleth.ipynb
 │   ├── choropleth.ipynb
@@ -47,13 +47,15 @@ project/
 
 1. **Install dependencies:** `pip install -r requirements.txt` or `uv sync` if you have `uv`.
 2. **Download raw data** instructions can be found in `data/README.md`
-3. **Run data cleaning:** `data_cleaning.py`
+3. **Run data cleaning:** `python src/data_cleaning.py`
 4. **Run notebooks** in `notebooks/` for choropleth and state ranking visualizations
 
 ## Output Files
 
 - **`output/county_growth_rates.csv`**: County level HPI with FIPS, year, and annual change. Used in choropleth map notebooks (`choropleth.ipynb`, `price_trends_1year_chropleth.ipynb`)
 - **`output/state_growth_rates.csv`**: State level year on year growth and 3 year rolling average. Used in state ranking visualization
+- **`output/state_fastest_growth.csv`**: State level fastest valuation growth analysis (avg annual change over 5yr and 10yr, ranks by growth). One row per state.
+- **`output/county_fastest_growth.csv`**: County level fastest valuation growth analysis (avg annual change over 5yr and 10yr, national and in-state ranks). One row per county.
 
 ## Team
 
