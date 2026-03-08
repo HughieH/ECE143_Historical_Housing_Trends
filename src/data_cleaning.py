@@ -1,9 +1,11 @@
 """
 data cleaning script for Historical House Price Trends Visualizer
 
-produces two cleaned CSV outputs for visualizations:
+produces cleaned CSV outputs for visualizations and analysis:
 - output/county_growth_rates.csv (choropleth map)
 - output/state_growth_rates.csv (state ranking)
+- output/state_fastest_growth.csv (state level fastest valuation growth)
+- output/county_fastest_growth.csv (county level fastest valuation growth)
 """
 
 from pathlib import Path
@@ -193,7 +195,7 @@ def build_state_growth_rates(raw_dir, out_dir):
     df = df.sort_values(by = ["Abbreviation", "Year"])
     df["Rolling Avg Growth Rate (3yr)"] = (
         df.groupby("Abbreviation")["Annual Change (%)"].transform(
-            lambda x: x.rolling(3, min_period = 1).mean()
+            lambda x: x.rolling(3, min_periods=1).mean()
         )
     )
 
@@ -206,6 +208,108 @@ def build_state_growth_rates(raw_dir, out_dir):
     out_path = out_dir / "state_growth_rates.csv"
     df.to_csv(out_path, index = False)
     print(f"  Saved {summary['final_rows']} rows to {out_path}.")
+    return summary
+
+
+def build_state_fastest_growth(out_dir):
+    """
+    create state_fastest_growth.csv: state-level analysis of fastest growing valuations
+
+    uses state_growth_rates.csv; computes average annual change over last 5 and 10 years
+    per state and ranks states by those averages.
+
+    parameters:
+        input:
+            out_dir (path to output directory)
+        output:
+            dict (summary with row count and year windows used)
+    """
+    assert isinstance(out_dir, Path)
+    assert out_dir.is_dir()
+    path = out_dir / "state_growth_rates.csv"
+    assert path.exists(), "state_growth_rates.csv must be built first"
+    df = pd.read_csv(path)
+    df["Annual Change (%)"] = pd.to_numeric(df["Annual Change (%)"], errors="coerce")
+    df = df.dropna(subset=["Abbreviation", "State", "Year", "Annual Change (%)"])
+    df = df.sort_values(by=["Abbreviation", "Year"])
+
+    max_year = int(df["Year"].max())
+    window_5 = list(range(max_year - 4, max_year + 1))
+    window_10 = list(range(max_year - 9, max_year + 1))
+
+    agg_5 = (
+        df[df["Year"].isin(window_5)]
+        .groupby(["Abbreviation", "State"], as_index=False)["Annual Change (%)"]
+        .mean()
+        .rename(columns={"Annual Change (%)": "Avg Annual Change (5yr) %"})
+    )
+    agg_10 = (
+        df[df["Year"].isin(window_10)]
+        .groupby(["Abbreviation", "State"], as_index=False)["Annual Change (%)"]
+        .mean()
+        .rename(columns={"Annual Change (%)": "Avg Annual Change (10yr) %"})
+    )
+    merged = agg_5.merge(agg_10, on=["Abbreviation", "State"], how="outer")
+    merged["Rank by 5yr Growth"] = merged["Avg Annual Change (5yr) %"].rank(ascending=False, method="min").astype("Int64")
+    merged["Rank by 10yr Growth"] = merged["Avg Annual Change (10yr) %"].rank(ascending=False, method="min").astype("Int64")
+    merged = merged.sort_values(by="Rank by 5yr Growth")
+
+    out_path = out_dir / "state_fastest_growth.csv"
+    merged.to_csv(out_path, index=False)
+    summary = {"final_rows": len(merged), "year_end": max_year, "window_5": f"{max_year-4}-{max_year}", "window_10": f"{max_year-9}-{max_year}"}
+    print(f"  Saved {summary['final_rows']} rows to {out_path} (5yr: {summary['window_5']}, 10yr: {summary['window_10']}).")
+    return summary
+
+
+def build_county_fastest_growth(out_dir):
+    """
+    create county_fastest_growth.csv: county-level analysis of fastest growing valuations
+
+    uses county_growth_rates.csv; computes average annual change over last 5 and 10 years
+    per county; ranks counties nationally and within state.
+
+    parameters:
+        input:
+            out_dir (path to output directory)
+        output:
+            dict (summary with row count and year windows used)
+    """
+    assert isinstance(out_dir, Path)
+    assert out_dir.is_dir()
+    path = out_dir / "county_growth_rates.csv"
+    assert path.exists(), "county_growth_rates.csv must be built first"
+    df = pd.read_csv(path, dtype={"FIPS code": str})
+    df["Annual Change (%)"] = pd.to_numeric(df["Annual Change (%)"], errors="coerce")
+    df = df.dropna(subset=["State", "County", "FIPS code", "Year", "Annual Change (%)"])
+    df = df.sort_values(by=["State", "County", "Year"])
+
+    max_year = int(df["Year"].max())
+    window_5 = list(range(max_year - 4, max_year + 1))
+    window_10 = list(range(max_year - 9, max_year + 1))
+
+    agg_5 = (
+        df[df["Year"].isin(window_5)]
+        .groupby(["State", "County", "FIPS code"], as_index=False)["Annual Change (%)"]
+        .mean()
+        .rename(columns={"Annual Change (%)": "Avg Annual Change (5yr) %"})
+    )
+    agg_10 = (
+        df[df["Year"].isin(window_10)]
+        .groupby(["State", "County", "FIPS code"], as_index=False)["Annual Change (%)"]
+        .mean()
+        .rename(columns={"Annual Change (%)": "Avg Annual Change (10yr) %"})
+    )
+    merged = agg_5.merge(agg_10, on=["State", "County", "FIPS code"], how="outer")
+    merged["Rank National (5yr)"] = merged["Avg Annual Change (5yr) %"].rank(ascending=False, method="min").astype("Int64")
+    merged["Rank National (10yr)"] = merged["Avg Annual Change (10yr) %"].rank(ascending=False, method="min").astype("Int64")
+    merged["Rank in State (5yr)"] = merged.groupby("State")["Avg Annual Change (5yr) %"].rank(ascending=False, method="min").astype("Int64")
+    merged["Rank in State (10yr)"] = merged.groupby("State")["Avg Annual Change (10yr) %"].rank(ascending=False, method="min").astype("Int64")
+    merged = merged.sort_values(by=["State", "Rank in State (5yr)"])
+
+    out_path = out_dir / "county_fastest_growth.csv"
+    merged.to_csv(out_path, index=False)
+    summary = {"final_rows": len(merged), "year_end": max_year, "window_5": f"{max_year-4}-{max_year}", "window_10": f"{max_year-9}-{max_year}"}
+    print(f"  Saved {summary['final_rows']} rows to {out_path} (5yr: {summary['window_5']}, 10yr: {summary['window_10']}).")
     return summary
 
 
@@ -246,6 +350,14 @@ def print_summary(county_summary, state_summary, out_dir):
         print(f"  Year range: {state_df['Year'].min()} – {state_df['Year'].max()}")
         print(f"  Unique states: {state_df['Abbreviation'].nunique()}")
         print(f"  Rows dropped (missing key columns): {state_summary['dropped_missing']}")
+    if (out_dir / "state_fastest_growth.csv").exists():
+        sf = pd.read_csv(out_dir / "state_fastest_growth.csv")
+        print("\n--- state_fastest_growth.csv ---")
+        print(f"  Rows: {len(sf)} (one per state)")
+    if (out_dir / "county_fastest_growth.csv").exists():
+        cf = pd.read_csv(out_dir / "county_fastest_growth.csv")
+        print("\n--- county_fastest_growth.csv ---")
+        print(f"  Rows: {len(cf)} (one per county)")
     print("=" * 60)
 
 
@@ -281,6 +393,11 @@ def main():
             "\nSkipping state_growth_rates.csv (hpi_at_state.xlsx not found in data/raw/). "
             "Add it per data/README.md to generate state output."
         )
+
+    print("\nBuilding fastest-growth analysis (state and county) ...")
+    build_county_fastest_growth(out_dir)
+    if state_summary is not None and (out_dir / "state_growth_rates.csv").exists():
+        build_state_fastest_growth(out_dir)
 
     print_summary(county_summary, state_summary, out_dir)
 

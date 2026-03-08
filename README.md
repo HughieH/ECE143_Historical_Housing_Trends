@@ -36,7 +36,7 @@ project/
 │   └── README.md                   # description of raw data
 ├── output/
 │   ├── (choropleth videos: state_growth_rates_choropleth_animation.mp4, state_growth_rates_over_3_yrs_choropleth_animation.mp4)
-│   └── (cleaned files: county_growth_rates.csv, state_growth_rates.csv, hpi_bar_chart_race.csv)
+│   └── (cleaned files: county_growth_rates.csv, state_growth_rates.csv, hpi_bar_chart_race.csv,county_growth_rates.csv, state_growth_rates.csv, state_fastest_growth.csv, county_fastest_growth.csv)
 ├── notebooks/
 │   ├── state_level_choropleth.ipynb
 │   ├── choropleth.ipynb
@@ -57,7 +57,7 @@ project/
 
 1. **Install dependencies:** `pip install -r requirements.txt` or `uv sync` if you have `uv`.
 2. **Download raw data** instructions can be found in `data/README.md`
-3. **Run data cleaning:** `data_cleaning.py`
+3. **Run data cleaning:** `python src/data_cleaning.py`
 4. **Run notebooks** in `notebooks/` for choropleth and state ranking visualizations
 
 ## Output Files
@@ -66,6 +66,8 @@ project/
 - **`output/state_growth_rates.csv`**: State level year on year growth and 3 year rolling average. Used in state ranking visualization
 - **`output/hpi_bar_chart_race.csv`**: Wide-format HPI data by state and quarter. Used as input for the Flourish bar chart race
 - **`state_growth_rates_choropleth_animation.mp4`,`state_growth_rates_over_3_yrs_choropleth_animation.mp4`**: county-level choropleth maps
+- **`output/state_fastest_growth.csv`**: State level fastest valuation growth analysis (avg annual change over 5yr and 10yr, ranks by growth). One row per state.
+- **`output/county_fastest_growth.csv`**: County level fastest valuation growth analysis (avg annual change over 5yr and 10yr, national and in-state ranks). One row per county.
 
 ## Team
 
