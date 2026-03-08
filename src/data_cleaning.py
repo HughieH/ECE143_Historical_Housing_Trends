@@ -211,7 +211,7 @@ def build_state_growth_rates(raw_dir, out_dir):
     return summary
 
 
-def build_state_fastest_growth(out_dir):
+def build_state_fastest_growth(out_dir, min_years_5=3, min_years_10=5):
     """
     create state_fastest_growth.csv: state-level analysis of fastest growing valuations
 
@@ -221,6 +221,8 @@ def build_state_fastest_growth(out_dir):
     parameters:
         input:
             out_dir (path to output directory)
+            min_years_5 (minimum data points required in 5yr window, default 3)
+            min_years_10 (minimum data points required in 10yr window, default 5)
         output:
             dict (summary with row count and year windows used)
     """
@@ -237,14 +239,21 @@ def build_state_fastest_growth(out_dir):
     window_5 = list(range(max_year - 4, max_year + 1))
     window_10 = list(range(max_year - 9, max_year + 1))
 
+    df_5 = df[df["Year"].isin(window_5)]
+    counts_5 = df_5.groupby(["Abbreviation", "State"]).size().reset_index(name="n")
+    valid_5 = counts_5[counts_5["n"] >= min_years_5][["Abbreviation", "State"]]
     agg_5 = (
-        df[df["Year"].isin(window_5)]
+        df_5.merge(valid_5, on=["Abbreviation", "State"])
         .groupby(["Abbreviation", "State"], as_index=False)["Annual Change (%)"]
         .mean()
         .rename(columns={"Annual Change (%)": "Avg Annual Change (5yr) %"})
     )
+
+    df_10 = df[df["Year"].isin(window_10)]
+    counts_10 = df_10.groupby(["Abbreviation", "State"]).size().reset_index(name="n")
+    valid_10 = counts_10[counts_10["n"] >= min_years_10][["Abbreviation", "State"]]
     agg_10 = (
-        df[df["Year"].isin(window_10)]
+        df_10.merge(valid_10, on=["Abbreviation", "State"])
         .groupby(["Abbreviation", "State"], as_index=False)["Annual Change (%)"]
         .mean()
         .rename(columns={"Annual Change (%)": "Avg Annual Change (10yr) %"})
@@ -261,7 +270,7 @@ def build_state_fastest_growth(out_dir):
     return summary
 
 
-def build_county_fastest_growth(out_dir):
+def build_county_fastest_growth(out_dir, min_years_5=3, min_years_10=5):
     """
     create county_fastest_growth.csv: county-level analysis of fastest growing valuations
 
@@ -271,6 +280,8 @@ def build_county_fastest_growth(out_dir):
     parameters:
         input:
             out_dir (path to output directory)
+            min_years_5 (minimum data points required in 5yr window, default 3)
+            min_years_10 (minimum data points required in 10yr window, default 5)
         output:
             dict (summary with row count and year windows used)
     """
@@ -286,20 +297,29 @@ def build_county_fastest_growth(out_dir):
     max_year = int(df["Year"].max())
     window_5 = list(range(max_year - 4, max_year + 1))
     window_10 = list(range(max_year - 9, max_year + 1))
+    group_cols = ["State", "County", "FIPS code"]
 
+    df_5 = df[df["Year"].isin(window_5)]
+    counts_5 = df_5.groupby(group_cols).size().reset_index(name="n")
+    valid_5 = counts_5[counts_5["n"] >= min_years_5][group_cols]
     agg_5 = (
-        df[df["Year"].isin(window_5)]
-        .groupby(["State", "County", "FIPS code"], as_index=False)["Annual Change (%)"]
+        df_5.merge(valid_5, on=group_cols)
+        .groupby(group_cols, as_index=False)["Annual Change (%)"]
         .mean()
         .rename(columns={"Annual Change (%)": "Avg Annual Change (5yr) %"})
     )
+
+    df_10 = df[df["Year"].isin(window_10)]
+    counts_10 = df_10.groupby(group_cols).size().reset_index(name="n")
+    valid_10 = counts_10[counts_10["n"] >= min_years_10][group_cols]
     agg_10 = (
-        df[df["Year"].isin(window_10)]
-        .groupby(["State", "County", "FIPS code"], as_index=False)["Annual Change (%)"]
+        df_10.merge(valid_10, on=group_cols)
+        .groupby(group_cols, as_index=False)["Annual Change (%)"]
         .mean()
         .rename(columns={"Annual Change (%)": "Avg Annual Change (10yr) %"})
     )
-    merged = agg_5.merge(agg_10, on=["State", "County", "FIPS code"], how="outer")
+
+    merged = agg_5.merge(agg_10, on=group_cols, how="outer")
     merged["Rank National (5yr)"] = merged["Avg Annual Change (5yr) %"].rank(ascending=False, method="min").astype("Int64")
     merged["Rank National (10yr)"] = merged["Avg Annual Change (10yr) %"].rank(ascending=False, method="min").astype("Int64")
     merged["Rank in State (5yr)"] = merged.groupby("State")["Avg Annual Change (5yr) %"].rank(ascending=False, method="min").astype("Int64")

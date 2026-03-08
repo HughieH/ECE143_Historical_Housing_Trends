@@ -6,3 +6,4 @@ lxml
 kaleido
 pmdarima
 statsmodels
+nbformat>=4.2.0

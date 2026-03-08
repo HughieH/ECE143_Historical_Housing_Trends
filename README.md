@@ -41,6 +41,7 @@ project/
 │   ├── state_level_choropleth.ipynb
 │   ├── choropleth.ipynb
 │   ├── price_trends_1year_chropleth.ipynb
+│   ├── fastest_growth_visualizations.ipynb   # state bar chart + county choropleth (fastest growth)
 │   └── hpi_prediction.ipynb        # ARIMA forecast analysis
 ├── src/
 │   ├── data_cleaning.py            # data cleaning script
@@ -66,8 +67,8 @@ project/
 - **`output/state_growth_rates.csv`**: State level year on year growth and 3 year rolling average. Used in state ranking visualization
 - **`output/hpi_bar_chart_race.csv`**: Wide-format HPI data by state and quarter. Used as input for the Flourish bar chart race
 - **`state_growth_rates_choropleth_animation.mp4`,`state_growth_rates_over_3_yrs_choropleth_animation.mp4`**: county-level choropleth maps
-- **`output/state_fastest_growth.csv`**: State level fastest valuation growth analysis (avg annual change over 5yr and 10yr, ranks by growth). One row per state.
-- **`output/county_fastest_growth.csv`**: County level fastest valuation growth analysis (avg annual change over 5yr and 10yr, national and in-state ranks). One row per county.
+- **`output/state_fastest_growth.csv`**: State level fastest valuation growth analysis (avg annual change over 5yr and 10yr, ranks by growth) w/ one row per state. Used in `fastest_growth_visualizations.ipynb` (state bar chart).
+- **`output/county_fastest_growth.csv`**: County level fastest valuation growth analysis (avg annual change over 5yr and 10yr, national and in-state ranks). One row per county. Used in `fastest_growth_visualizations.ipynb` (county choropleth).
 
 ## Team
 
