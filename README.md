@@ -4,6 +4,10 @@ An animated visualization of U.S. real estate price growth rates from approximat
 
 [Link to Project Doc](https://docs.google.com/document/d/1YSsB1MgWivRdj0NZkEdz1WsyvrbjEVrToSkB1Ts24Ko/edit?usp=sharing)
 
+## Presentation
+
+[View Final Presentation (PDF)](ECE%20143%20Historical%20Housing%20Trends%20Presentation%20.pdf)
+
 ## State Level Choropleth Animation
 
 https://github.com/user-attachments/assets/3a7a76e2-3d75-40b5-8814-d5afb7df3db6
@@ -53,6 +57,7 @@ project/
 │   ├── prediction.py               # ARIMA forecasting module
 │   ├── plot_utils.py               # visualization utilities for ARIMA plots
 │   └── render_choropleth_to_video.py  # render choropleth frames to MP4
+├── ECE 143 Historical Housing Trends Presentation .pdf
 ├── .gitignore
 ├── requirements.txt
 ├── pyproject.toml
