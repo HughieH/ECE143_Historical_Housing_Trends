@@ -25,50 +25,78 @@ We use an **ARIMA** (AutoRegressive Integrated Moving Average) model to forecast
 - **Forecast**: 10-year ahead predictions (2025–2034) with 95% confidence intervals
 - **Visualizations**: Single/multi-state forecast plots, choropleth maps, animated choropleth, and error analysis
 
-See `notebooks/hpi_prediction.ipynb` for the full analysis and `src/prediction.py` for the model code.
+See `notebooks/visualizations.ipynb` for all visualizations and `src/prediction.py` for the model code.
 
 ## File Structure
 
 ```
 project/
 ├── data/
-│   ├── raw/                        # raw data files (real estate sales not included due to size)
-│   └── README.md                   # description of raw data
+│   ├── raw/                        # raw data files (see data/README.md for sources)
+│   └── README.md                   # description of raw data sources
 ├── output/
-│   ├── (choropleth videos: state_growth_rates_choropleth_animation.mp4, state_growth_rates_over_3_yrs_choropleth_animation.mp4)
-│   └── (cleaned files: county_growth_rates.csv, state_growth_rates.csv, hpi_bar_chart_race.csv,county_growth_rates.csv, state_growth_rates.csv, state_fastest_growth.csv, county_fastest_growth.csv)
+│   ├── county_growth_rates.csv     # county HPI with FIPS, year, annual change
+│   ├── state_growth_rates.csv      # state year-on-year and 3-year rolling growth
+│   ├── hpi_bar_chart_race.csv      # wide-format HPI for Flourish bar chart race
+│   ├── state_fastest_growth.csv    # state 5yr/10yr fastest growth rankings
+│   ├── county_fastest_growth.csv   # county 5yr/10yr fastest growth rankings
+│   ├── state_growth_rates_choropleth_animation.mp4
+│   └── state_growth_rates_over_3_yrs_choropleth_animation.mp4
 ├── notebooks/
+│   ├── visualizations.ipynb        # main notebook — all visualizations for the presentation
 │   ├── state_level_choropleth.ipynb
-│   ├── choropleth.ipynb
-│   ├── price_trends_1year_chropleth.ipynb
-│   ├── fastest_growth_visualizations.ipynb   # state bar chart + county choropleth (fastest growth)
-│   └── hpi_prediction.ipynb        # ARIMA forecast analysis
+│   ├── fastest_growth_visualizations.ipynb
+│   └── hpi_prediction.ipynb
 ├── src/
-│   ├── data_cleaning.py            # data cleaning script
+│   ├── data_cleaning.py            # data cleaning & CSV generation
 │   ├── HPI_to_race.py              # data processing for bar chart race
 │   ├── prediction.py               # ARIMA forecasting module
-│   ├── plot_utils.py               # visualization utilities
-│   └── render_choropleth_to_video.py
+│   ├── plot_utils.py               # visualization utilities for ARIMA plots
+│   └── render_choropleth_to_video.py  # render choropleth frames to MP4
 ├── .gitignore
 ├── requirements.txt
+├── pyproject.toml
 └── README.md
 ```
 
 ## How to Run
 
-1. **Install dependencies:** `pip install -r requirements.txt` or `uv sync` if you have `uv`.
-2. **Download raw data** instructions can be found in `data/README.md`
-3. **Run data cleaning:** `python src/data_cleaning.py`
-4. **Run notebooks** in `notebooks/` for choropleth and state ranking visualizations
+1. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+   Or, if you have [uv](https://docs.astral.sh/uv/):
+   ```bash
+   uv sync
+   ```
 
-## Output Files
+2. **Download raw data** — instructions can be found in `data/README.md`.
 
-- **`output/county_growth_rates.csv`**: County level HPI with FIPS, year, and annual change. Used in choropleth map notebooks (`choropleth.ipynb`, `price_trends_1year_chropleth.ipynb`)
-- **`output/state_growth_rates.csv`**: State level year on year growth and 3 year rolling average. Used in state ranking visualization
-- **`output/hpi_bar_chart_race.csv`**: Wide-format HPI data by state and quarter. Used as input for the Flourish bar chart race
-- **`state_growth_rates_choropleth_animation.mp4`,`state_growth_rates_over_3_yrs_choropleth_animation.mp4`**: county-level choropleth maps
-- **`output/state_fastest_growth.csv`**: State level fastest valuation growth analysis (avg annual change over 5yr and 10yr, ranks by growth) w/ one row per state. Used in `fastest_growth_visualizations.ipynb` (state bar chart).
-- **`output/county_fastest_growth.csv`**: County level fastest valuation growth analysis (avg annual change over 5yr and 10yr, national and in-state ranks). One row per county. Used in `fastest_growth_visualizations.ipynb` (county choropleth).
+3. **Run data cleaning:**
+   ```bash
+   python src/data_cleaning.py
+   ```
+
+4. **Open the main notebook** and run all cells:
+   ```
+   notebooks/visualizations.ipynb
+   ```
+   This single notebook contains every visualization used in the presentation.
+
+## Third-Party Modules
+
+| Module | Purpose |
+|--------|---------|
+| [pandas](https://pandas.pydata.org/) | Data manipulation and CSV/Excel I/O |
+| [numpy](https://numpy.org/) | Numerical operations |
+| [plotly](https://plotly.com/python/) | Interactive visualizations (choropleth maps, bar charts, scatter plots) |
+| [openpyxl](https://openpyxl.readthedocs.io/) | Reading `.xlsx` Excel files |
+| [lxml](https://lxml.de/) | HTML table parsing (used by `pd.read_html`) |
+| [kaleido](https://github.com/plotly/Kaleido) | Static image export for Plotly figures |
+| [pmdarima](https://alkaline-ml.com/pmdarima/) | Auto ARIMA model selection and fitting |
+| [statsmodels](https://www.statsmodels.org/) | Statistical modeling (ARIMA backend) |
+| [scipy](https://scipy.org/) | Statistical tests (linear regression in error analysis) |
+| [nbformat](https://nbformat.readthedocs.io/) | Jupyter notebook format utilities |
 
 ## Team
 

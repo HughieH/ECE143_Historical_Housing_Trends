@@ -6,4 +6,5 @@ lxml
 kaleido
 pmdarima
 statsmodels
+scipy
 nbformat>=4.2.0
